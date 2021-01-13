@@ -2,18 +2,18 @@ package hu.bookingsystem.repository;
 
 import hu.bookingsystem.model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserRepository {
-    private final List<User> users = new ArrayList<>();
+    private final Map<Long, User> users = new HashMap<>();
 
-    public List<User> getUsers(){
+    public Map<Long, User> getUsers() {
         return users;
     }
 
-    public void addUser(User user){
-        users.add(user);
+    public void addUser(User user) {
+        users.put(user.getId(), user);
     }
 
 }

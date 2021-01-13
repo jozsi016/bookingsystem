@@ -2,17 +2,25 @@ package hu.bookingsystem.repository;
 
 import hu.bookingsystem.model.Room;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RoomRepository {
-    private final List<Room> rooms = new ArrayList<>();
+    private final Map<Long, Room> rooms = initRooms();
 
-    public List<Room> getRooms() {
+    public Map<Long, Room> getRooms() {
         return rooms;
     }
 
-    public void addRooms(Room room){
-        rooms.add(room);
+    public void addRoom(Room room) {
+        rooms.put(room.getId(), room);
+    }
+
+    public Map<Long, Room> initRooms() {
+        Map<Long, Room> rooms = new HashMap<>();
+        for (long i = 0; i < 30; i++) {
+            rooms.put(i, new Room(i, 5000));
+        }
+        return rooms;
     }
 }

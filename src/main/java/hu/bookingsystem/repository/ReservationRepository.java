@@ -2,17 +2,17 @@ package hu.bookingsystem.repository;
 
 import hu.bookingsystem.model.Reservation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReservationRepository {
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Map<Long, Reservation> reservations = new HashMap<>();
 
-    public List<Reservation> getReservations() {
+    public Map<Long, Reservation> getReservations() {
         return reservations;
     }
 
     public void addReservation(Reservation reservation) {
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
     }
 }
