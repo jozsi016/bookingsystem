@@ -18,7 +18,7 @@ public class RoomRepository {
 
     public Map<Long, Room> initRooms() {
         Map<Long, Room> rooms = new HashMap<>();
-        for (long i = 0; i < 30; i++) {
+        for (long i = 1; i <= 30; i++) {
             rooms.put(i, new Room(i, 5000));
         }
         return rooms;
