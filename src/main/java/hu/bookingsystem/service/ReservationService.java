@@ -11,13 +11,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/*
- *   *reservation createReservation(User, Room, start, end)
- *   *getReservation(reservationId)
- *   *getAllUserReservationBy(userId);
- *
- *
- */
 public class ReservationService {
     public long reservationId = 1;
     private RoomService roomService;
@@ -38,6 +31,25 @@ public class ReservationService {
         Reservation reservation = new Reservation(reservationId, user.getId(), room.getId(), start, end, price);
         reservationRepository.addReservation(reservation);
         reservationId++;
+    }
+
+    public void deleteReservation(long reservationId) {
+        reservationRepository.getReservations().remove(reservationId);
+    }
+
+    public List<Room> listOfAvailableRoom(LocalDate start, LocalDate end) {
+        List<Room> rooms = roomService.getAllRoom();
+        Predicate<Reservation> reservationPredicate =
+                r -> (r.getStartDate().compareTo(start) >= 0 && r.getEndDate().compareTo(start) >= 0) ||
+                        ( r.getStartDate().compareTo(end) >= 0 && r.getEndDate().compareTo(end) >=0);
+        List<Reservation> reservations = reservationRepository.getReservations().values().stream().collect(Collectors.toList());
+        for (Reservation r : reservations) {
+            if (reservationPredicate.test(r)) {
+                Room room = roomService.getRoomById(r.getRoomId());
+                rooms.remove(room);
+            }
+        }
+     return rooms;
     }
 
     public Reservation getReservationById(long reservationId) {

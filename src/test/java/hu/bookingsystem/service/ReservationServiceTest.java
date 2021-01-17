@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,7 +81,7 @@ public class ReservationServiceTest {
         LocalDate endFuture = LocalDate.now().plusDays(8);
         reservationService.createReservation(user, room2, startFuture, endFuture);
 
-        Predicate<Reservation> predicateForAge = (r) ->r.getUserId() == user.getId() && r.getStartDate().compareTo(forFilter) >= 0;
+        Predicate<Reservation> predicateForAge = (r) -> r.getUserId() == user.getId() && r.getStartDate().compareTo(forFilter) >= 0;
         assertEquals(2L, reservationService.getFilteredReservation(predicateForAge).size());
     }
 
@@ -100,7 +102,7 @@ public class ReservationServiceTest {
         reservationService.createReservation(user, room2, startFuture, endFuture);
 
         Predicate<Reservation> predicateForPeriodOfTime =
-                (r) -> r.getUserId() ==  user.getId()  && (r.getStartDate().compareTo(startFilter)   >= 0
+                (r) -> r.getUserId() == user.getId() && (r.getStartDate().compareTo(startFilter) >= 0
                         && r.getEndDate().compareTo(endFilter) <= 0);
 
         assertEquals(2L, reservationService.getFilteredReservation(predicateForPeriodOfTime).size());
@@ -108,7 +110,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    public void testFilterByPrice(){
+    public void testFilterByPrice() {
         User user = new User(1L, "Tom");
         double priceToFilter = 25000;
 
@@ -123,8 +125,41 @@ public class ReservationServiceTest {
         reservationService.createReservation(user, room2, startFuture, endFuture);
 
         Predicate<Reservation> predicateForPrice =
-                (r) -> r.getUserId() ==  user.getId()  && r.getPrice() < priceToFilter;
+                (r) -> r.getUserId() == user.getId() && r.getPrice() < priceToFilter;
 
         assertEquals(2L, reservationService.getFilteredReservation(predicateForPrice).size());
+    }
+
+    @Test
+    public void testListOfAvailableRoom() {
+        User user = new User(1L, "Tom");
+        LocalDate startFilter = LocalDate.now().minusYears(1);
+        LocalDate endFilter = LocalDate.now().plusYears(1);
+
+        Room room = new Room(1L, 4500);
+        LocalDate start = LocalDate.now().minusDays(5L);
+        LocalDate end = LocalDate.now();
+        reservationService.createReservation(user, room, start, end);
+
+        Room room2 = new Room(2L, 4500);
+        LocalDate startFuture = LocalDate.now().plusDays(3);
+        LocalDate endFuture = LocalDate.now().plusDays(8);
+        reservationService.createReservation(user, room2, startFuture, endFuture);
+
+        List<Room> rooms = reservationService.listOfAvailableRoom(startFilter, endFilter);
+        assertEquals(28, rooms.size());
+
+        Room room3 = new Room(31L, 4500);
+        LocalDate startOldReservation = LocalDate.now().minusYears(3);
+        LocalDate endOldReservation = LocalDate.now().minusYears(3).plusDays(7);
+        roomRepository.addRoom(room3);
+        reservationService.createReservation(user, room3, startOldReservation, endOldReservation);
+
+        rooms = reservationService.listOfAvailableRoom(startFilter, endFilter);
+        assertEquals(29, rooms.size());
+
+
+
+
     }
 }
