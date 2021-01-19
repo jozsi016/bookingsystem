@@ -1,6 +1,7 @@
 package hu.bookingsystem.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Reservation {
     private long id;
@@ -65,6 +66,19 @@ public class Reservation {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return id == that.id && userId == that.userId && roomId == that.roomId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, roomId);
     }
 
     @Override

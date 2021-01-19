@@ -37,7 +37,7 @@ public class ReservationService {
         reservationRepository.getReservations().remove(reservationId);
     }
 
-    public List<Room> listOfAvailableRoom(LocalDate start, LocalDate end) {
+    public List<Room> listOfAvailableRooms(LocalDate start, LocalDate end) {
         List<Room> rooms = roomService.getAllRoom();
         Predicate<Reservation> reservationPredicate =
                 r -> (r.getStartDate().compareTo(start) >= 0 && r.getEndDate().compareTo(start) >= 0) ||
