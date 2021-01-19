@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class UserRepositoryTest {
 
@@ -17,15 +16,18 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testAddUsers() {
+    public void shouldAddUsers() {
+        //Given
         int expected = 2;
+        User tom = new User(1, "Tom");
+        User kevin = new User(2, "Kevin");
 
-        User Tom = new User(1, "Tom");
-        User Kevin = new User(2, "Kevin");
-        userRepository.addUser(Tom);
-        userRepository.addUser(Kevin);
+        //When
+        userRepository.addUser(tom);
+        userRepository.addUser(kevin);
 
-        assertNotNull(userRepository.getUsers());
+        //Then
         assertEquals(expected, userRepository.getUsers().size());
+        assertEquals(tom, userRepository.getUsers().get(1L));
     }
 }

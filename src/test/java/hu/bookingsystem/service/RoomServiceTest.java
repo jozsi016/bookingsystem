@@ -21,29 +21,38 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testCreateRoom() {
+    public void shouldCreateRoom() {
+        //Given
         long expectedId = 31;
+        //When
         roomService.createRoom(31, 4000);
+        //Then
         assertNotNull(roomService.getRoomById(31L));
     }
 
     @Test
-    public void testDeleteRoomById() {
+    public void shouldDeleteRoomById() {
+        //When
         roomService.deleteRoomById(12L);
+        //Then
         assertNull(roomService.getRoomById(12L));
     }
 
     @Test
-    public void testRoomById() {
+    public void shouldRoomById() {
+        //When
         Room room = roomService.getRoomById(12L);
+        //Then
         assertNotNull(room);
     }
 
     @Test
-    public void testGetAllRoom() {
-        List<Room> rooms = roomService.getAllRoom();
+    public void shouldGetAllRoom() {
+        //Given
         int expected = 30;
-        assertNotNull(rooms);
+        //When
+        List<Room> rooms = roomService.getAllRoom();
+        //Then
         assertEquals(expected, rooms.size());
     }
 }

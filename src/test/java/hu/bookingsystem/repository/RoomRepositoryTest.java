@@ -7,8 +7,6 @@ import org.junit.Test;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 
 public class RoomRepositoryTest {
 
@@ -22,17 +20,21 @@ public class RoomRepositoryTest {
     }
 
     @Test
-    public void testInitRooms() {
+    public void shouldInitRooms() {
+        //Given
         int expected = 30;
-        assertNotNull(rooms);
+        //Then
         assertEquals(expected, rooms.values().size());
     }
 
     @Test
-    public void testAddRooms() {
+    public void shouldAddRooms() {
+        //given
         int expected = 31;
         Room room = new Room(31, 5000);
+        //when
         roomRepo.addRoom(room);
+        //then
         assertEquals(expected, roomRepo.getRooms().size());
     }
 }
