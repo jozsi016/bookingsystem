@@ -2,9 +2,9 @@ package hu.bookingsystem.model;
 
 import java.util.Objects;
 
-public class Room {
-    private long id;
-    private double unitPrice;
+public final class Room {
+    private final long id;
+    private final double unitPrice;
 
     public Room(long id, double unitPrice) {
         this.id = id;
@@ -15,16 +15,8 @@ public class Room {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public double getUnitPrice() {
         return unitPrice;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
     }
 
     @Override
