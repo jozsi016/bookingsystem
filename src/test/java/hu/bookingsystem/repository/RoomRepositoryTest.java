@@ -23,8 +23,10 @@ public class RoomRepositoryTest {
     public void shouldInitRooms() {
         //Given
         int expected = 30;
+        //when
+        int actualRoomsSize = rooms.values().size();
         //Then
-        assertEquals(expected, rooms.values().size());
+        assertEquals(expected, actualRoomsSize);
     }
 
     @Test
@@ -32,9 +34,10 @@ public class RoomRepositoryTest {
         //given
         int expected = 31;
         Room room = new Room(31, 5000);
-        //when
         roomRepo.addRoom(room);
+        //when
+        int actual = roomRepo.getRooms().size();
         //then
-        assertEquals(expected, roomRepo.getRooms().size());
+        assertEquals(expected, actual);
     }
 }

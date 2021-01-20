@@ -21,12 +21,14 @@ public class ReservationRepositoryTest {
     @Test
     public void shouldAddReservation() {
         //Given
+        long expected = 1;
         Room room = new Room(1L, 5000);
         double price = room.getUnitPrice() * 5;
         Reservation reservation = new Reservation(1L, 1L, room.getId(), LocalDate.now().minusDays(5), LocalDate.now(), price);
-        //When
         repo.addReservation(reservation);
+        //When
+        long actual = repo.getReservations().get(1L).getId();
         //Then
-        assertEquals(1L, repo.getReservations().get(1L).getId());
+        assertEquals(expected, actual);
     }
 }

@@ -6,6 +6,7 @@ import hu.bookingsystem.model.User;
 import hu.bookingsystem.repository.ReservationRepository;
 import hu.bookingsystem.repository.RoomRepository;
 import hu.bookingsystem.repository.UserRepository;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,8 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class ReservationServiceTest {
     private ReservationService reservationService;
@@ -41,10 +41,11 @@ public class ReservationServiceTest {
         User user = new User(1L, "Tom");
         LocalDate start = LocalDate.now().minusDays(5L);
         LocalDate end = LocalDate.now();
-        //When
         reservationService.createReservation(user, room, start, end);
+        //When
+        long actualRoomId = reservationService.getReservationById(1L).getRoomId();
         //Then
-        assertEquals(1L, reservationService.getReservationById(1L).getRoomId());
+        assertThat(1L, CoreMatchers.is(actualRoomId));
     }
 
     @Test
@@ -58,13 +59,13 @@ public class ReservationServiceTest {
         Room room2 = new Room(2L, 5000);
         LocalDate startFuture = LocalDate.now().plusDays(3);
         LocalDate endFuture = LocalDate.now().plusDays(8);
-
-        //When
         reservationService.createReservation(user, room2, startFuture, endFuture);
 
+        //When
+        long actualRoomId = reservationService.getAllUserReservationsByUserId(1L).get(1).getRoomId();
+
         //Then
-        assertNotNull(reservationService.getAllUserReservationsByUserId(1L).get(0));
-        assertEquals(2, reservationService.getAllUserReservationsByUserId(1L).size());
+        assertThat(2L, CoreMatchers.is(actualRoomId));
     }
 
     @Test
@@ -80,92 +81,13 @@ public class ReservationServiceTest {
         LocalDate endFuture = LocalDate.now().plusDays(8);
         Predicate<Reservation> predicateForAge =
                 (r) -> r.getUserId() == user.getId() && r.getStartDate().compareTo(forFilter) >= 0;
-
-        //When
         reservationService.createReservation(user, room, start, end);
         reservationService.createReservation(user, room2, startFuture, endFuture);
 
-        //Then
-        assertEquals(2L, reservationService.getFilteredReservation(predicateForAge).size());
-    }
-
-    @Test
-    public void shouldFilterByPeriodOfTime() {
-        //Given
-        User user = new User(1L, "Tom");
-        LocalDate startFilter = LocalDate.now().minusYears(1);
-        LocalDate endFilter = LocalDate.now().plusYears(1);
-        Room room = new Room(1L, 5000);
-        LocalDate start = LocalDate.now().minusDays(5L);
-        LocalDate end = LocalDate.now();
-        Room room2 = new Room(2L, 5000);
-        LocalDate startFuture = LocalDate.now().plusDays(3);
-        LocalDate endFuture = LocalDate.now().plusDays(8);
-        Predicate<Reservation> predicateForPeriodOfTime =
-                (r) -> r.getUserId() == user.getId() && (r.getStartDate().compareTo(startFilter) >= 0
-                        && r.getEndDate().compareTo(endFilter) <= 0);
         //When
-        reservationService.createReservation(user, room, start, end);
-        reservationService.createReservation(user, room2, startFuture, endFuture);
+        List<Reservation> actual = reservationService.getFilteredReservation(predicateForAge);
 
         //Then
-        assertEquals(2L, reservationService.getFilteredReservation(predicateForPeriodOfTime).size());
-
-    }
-
-    @Test
-    public void shouldFilterByPrice() {
-        //Given
-        User user = new User(1L, "Tom");
-        double priceToFilter = 25000;
-        Room room = new Room(1L, 4500);
-        LocalDate start = LocalDate.now().minusDays(5L);
-        LocalDate end = LocalDate.now();
-        Room room2 = new Room(2L, 4500);
-        LocalDate startFuture = LocalDate.now().plusDays(3);
-        LocalDate endFuture = LocalDate.now().plusDays(8);
-        Predicate<Reservation> predicateForPrice =
-                (r) -> r.getUserId() == user.getId() && r.getPrice() < priceToFilter;
-        //When
-        reservationService.createReservation(user, room, start, end);
-        reservationService.createReservation(user, room2, startFuture, endFuture);
-        //Then
-        assertEquals(2L, reservationService.getFilteredReservation(predicateForPrice).size());
-    }
-
-    @Test
-    public void shouldListOfAvailableRoom() {
-        //Given
-        User user = new User(1L, "Tom");
-        LocalDate startFilter = LocalDate.now().minusYears(1);
-        LocalDate endFilter = LocalDate.now().plusYears(1);
-
-        Room room = new Room(1L, 4500);
-        LocalDate start = LocalDate.now().minusDays(5L);
-        LocalDate end = LocalDate.now();
-
-        Room room2 = new Room(2L, 4500);
-        LocalDate startFuture = LocalDate.now().plusDays(3);
-        LocalDate endFuture = LocalDate.now().plusDays(8);
-
-        Room room3 = new Room(31L, 4500);
-        LocalDate startOldReservation = LocalDate.now().minusYears(3);
-        LocalDate endOldReservation = LocalDate.now().minusYears(3).plusDays(7);
-
-        //When
-        reservationService.createReservation(user, room, start, end);
-        reservationService.createReservation(user, room2, startFuture, endFuture);
-        List<Room> rooms = reservationService.listOfAvailableRooms(startFilter, endFilter);
-
-        //Then
-        assertEquals(28, rooms.size());
-
-        //When
-        roomRepository.addRoom(room3);
-        reservationService.createReservation(user, room3, startOldReservation, endOldReservation);
-        rooms = reservationService.listOfAvailableRooms(startFilter, endFilter);
-
-        //Then
-        assertEquals(29, rooms.size());
+        assertThat(1L, CoreMatchers.is(actual.get(0).getRoomId()));
     }
 }

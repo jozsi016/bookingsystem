@@ -15,10 +15,8 @@ public final class Reservation {
         this.id = id;
         this.userId = userId;
         this.roomId = roomId;
-        LocalDate cloneStart = LocalDate.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth());
-        this.startDate = cloneStart;
-        LocalDate cloneEnd = LocalDate.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth());
-        this.endDate = cloneEnd;
+        this.startDate = startDate.plusDays(0);
+        this.endDate = endDate.plusDays(0);
         this.price = price;
     }
 
@@ -35,16 +33,11 @@ public final class Reservation {
     }
 
     public LocalDate getStartDate() {
-        LocalDate cloneStart = LocalDate.of(this.startDate.getYear(),
-                this.startDate.getMonth(), this.startDate.getDayOfMonth());
-
-        return cloneStart;
+        return startDate;
     }
 
     public LocalDate getEndDate() {
-        LocalDate cloneEnd = LocalDate.of(this.endDate.getYear(),
-                this.endDate.getMonth(), this.endDate.getDayOfMonth());
-        return cloneEnd;
+        return endDate;
     }
 
     public double getPrice() {

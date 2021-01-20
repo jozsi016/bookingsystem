@@ -24,22 +24,26 @@ public class RoomServiceTest {
     public void shouldCreateRoom() {
         //Given
         long expectedId = 31;
-        //When
         roomService.createRoom(31, 4000);
+        //When
+        Room actualRoom = roomService.getRoomById(31L);
         //Then
-        assertNotNull(roomService.getRoomById(31L));
+        assertNotNull(actualRoom);
     }
 
     @Test
     public void shouldDeleteRoomById() {
-        //When
+        //Given
         roomService.deleteRoomById(12L);
+        //When
+        Room actualRoom = roomService.getRoomById(12L);
         //Then
-        assertNull(roomService.getRoomById(12L));
+        assertNull(actualRoom);
     }
 
     @Test
     public void shouldRoomById() {
+        //Given
         //When
         Room room = roomService.getRoomById(12L);
         //Then
@@ -50,9 +54,10 @@ public class RoomServiceTest {
     public void shouldGetAllRoom() {
         //Given
         int expected = 30;
-        //When
         List<Room> rooms = roomService.getAllRoom();
+        //When
+        int actualRoomsSize = rooms.size();
         //Then
-        assertEquals(expected, rooms.size());
+        assertEquals(expected, actualRoomsSize);
     }
 }

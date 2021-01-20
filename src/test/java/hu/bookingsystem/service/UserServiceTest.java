@@ -21,21 +21,21 @@ public class UserServiceTest {
     @Test
     public void shouldCreateUser() {
         //Given
-        //When
         userService.createUser(1L, "Tom");
-        User tom = userService.getUserById(1L);
+        //When
+        User actualUser = userService.getUserById(1L);
         //Then
-        assertNotNull(tom);
+        assertNotNull(actualUser);
     }
 
     @Test
     public void shouldDeleteUserBy() {
         //Given
         userService.createUser(1L, "Tom");
-        //When
         userService.deleteUserById(1L);
+        //When
+        User actualUser = userService.getUserById(1L);
         //Then
-        assertNull(userService.getUserById(1L));
-
+        assertNull(actualUser);
     }
 }
