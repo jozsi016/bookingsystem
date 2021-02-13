@@ -1,4 +1,4 @@
-package hu.bookingsystem.controller;
+package hu.bookingsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
