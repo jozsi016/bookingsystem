@@ -2,7 +2,6 @@ package hu.bookingsystem.controller;
 
 import hu.bookingsystem.model.Room;
 import hu.bookingsystem.service.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +20,6 @@ public class RoomController {
         return roomService.getAllRoom();
     }
 
-    //parameter objectum, olvashatos, indempotent implementacio
-    // bement szures ! fontos
-    // beepitet validacio
     @GetMapping("/room/{roomId}")
     Room getRoom(@PathVariable Long roomId) {
         return roomService.getRoomById(roomId);
@@ -34,8 +30,8 @@ public class RoomController {
         roomService.createRoom(roomId, unitPrice);
     }
 
-    @DeleteMapping("/room")
-    void deleteRoom(@RequestParam Long roomId) {
+    @DeleteMapping("/room/{roomId}")
+    void deleteRoom(@PathVariable Long roomId) {
         roomService.deleteRoomById(roomId);
     }
 
