@@ -25,18 +25,24 @@ public class UserControllerTest {
 
     @Test
     public void shouldReturnUser() {
+        //given
         User expected = new User(1, "Tony");
         this.restTemplate.put("http://localhost:" + port + "/user?userId=1&userName=Tony", Long.class, String.class);
+        //when
         User actual = this.restTemplate.getForObject("http://localhost:" + port + "/user/1", User.class);
+        //then
         assertThat(actual, is(expected));
     }
 
     @Test
     public void shouldReturnUsers(){
+        //given
         User expected = new User(1, "Tony");
         this.restTemplate.put("http://localhost:" + port + "/user?userId=1&userName=Tony", Long.class, String.class);
         this.restTemplate.put("http://localhost:" + port + "/user?userId=2&userName=Tina", Long.class, String.class);
+        //when
         List<LinkedHashMap> users = this.restTemplate.getForObject("http://localhost:" + port + "/users", List.class);
+        //then
         long id = (int) users.get(0).get("id");
         String unitPrice = (String) users.get(0).get("name");
         User actual = new User(id, unitPrice);
@@ -45,11 +51,14 @@ public class UserControllerTest {
 
     @Test
     public void shouldDeleteUser(){
+        //Given
         User expected = new User(2, "Tina");
         User tony = new User(1, "Tony");
         this.restTemplate.put("http://localhost:" + port + "/user?userId=1&userName=Tony", Long.class, String.class);
         this.restTemplate.put("http://localhost:" + port + "/user?userId=2&userName=Tina", Long.class, String.class);
+        //when
         this.restTemplate.delete("http://localhost:" + port + "/user/1");
+        //then
         List<LinkedHashMap> users = this.restTemplate.getForObject("http://localhost:" + port + "/users", List.class);
         long id = (int) users.get(0).get("id");
         String unitPrice = (String) users.get(0).get("name");
