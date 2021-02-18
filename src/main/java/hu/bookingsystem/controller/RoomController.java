@@ -1,10 +1,13 @@
 package hu.bookingsystem.controller;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import hu.bookingsystem.model.Room;
+import hu.bookingsystem.responsetype.RoomResponse;
 import hu.bookingsystem.service.RoomService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class RoomController {
@@ -15,23 +18,24 @@ public class RoomController {
         this.roomService = roomService;
     }
 
+    //direktbe listat adni nem jo otlet
     @GetMapping("/rooms")
-    List<Room> getRooms() {
-        return roomService.getAllRoom();
+    public RoomResponse getRooms() {
+        return new RoomResponse(roomService.getAllRoom());
     }
 
     @GetMapping("/room/{roomId}")
-    Room getRoom(@PathVariable Long roomId) {
-        return roomService.getRoomById(roomId);
+    public RoomResponse getRoom(@PathVariable Long roomId) {
+        return new RoomResponse(List.of(roomService.getRoomById(roomId)));
     }
 
     @PutMapping("/room")
-    void createRoom(@RequestParam Long roomId, double unitPrice) {
+    public void createRoom(@RequestParam Long roomId, double unitPrice) {
         roomService.createRoom(roomId, unitPrice);
     }
 
     @DeleteMapping("/room/{roomId}")
-    void deleteRoom(@PathVariable Long roomId) {
+    public void deleteRoom(@PathVariable Long roomId) {
         roomService.deleteRoomById(roomId);
     }
 

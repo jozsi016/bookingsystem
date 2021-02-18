@@ -1,11 +1,9 @@
 package hu.bookingsystem.controller;
 
 import hu.bookingsystem.model.User;
+import hu.bookingsystem.responsetype.UserResponse;
 import hu.bookingsystem.service.UserService;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class UserController {
@@ -22,8 +20,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getAllUser();
+    public UserResponse getUsers() {
+        return new UserResponse(userService.getAllUser());
     }
 
     @GetMapping("user/{userId}")
