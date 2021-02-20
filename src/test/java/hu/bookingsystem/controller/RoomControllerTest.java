@@ -2,7 +2,7 @@ package hu.bookingsystem.controller;
 
 import hu.bookingsystem.model.Room;
 import hu.bookingsystem.responsetype.RoomResponse;
-import org.hamcrest.CoreMatchers;
+import hu.bookingsystem.responsetype.RoomsResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +11,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -27,8 +29,8 @@ public class RoomControllerTest {
         //given
         Room expected = new Room(3, 5000);
         //when
-        RoomResponse rooms = this.restTemplate.getForObject("http://localhost:" + port + "/room/3", RoomResponse.class);
-        Room actual = rooms.getRooms().get(0);
+        ResponseEntity<RoomResponse> room = this.restTemplate.getForEntity("http://localhost:" + port + "/room/3", RoomResponse.class);
+        Room actual = room.getBody().getRoom();
         //then
         assertThat(actual, is(expected));
     }
@@ -38,9 +40,9 @@ public class RoomControllerTest {
         //given
         Room expected = new Room(1, 5000);
         //when
-        RoomResponse rooms = this.restTemplate.getForObject("http://localhost:" + port + "/rooms", RoomResponse.class);
+        ResponseEntity<RoomsResponse> rooms = this.restTemplate.getForEntity("http://localhost:" + port + "/rooms", RoomsResponse.class);
         //then
-        Room actual = rooms.getRooms().get(0);
+        Room actual = rooms.getBody().getRooms().get(0);
         assertThat(actual, is(expected));
     }
 
@@ -51,8 +53,8 @@ public class RoomControllerTest {
         //when
         this.restTemplate.put("http://localhost:" + port + "/room?roomId=31&unitPrice=4000", Long.class, Double.class);
         //then
-        RoomResponse rooms = this.restTemplate.getForObject("http://localhost:" + port + "/rooms", RoomResponse.class);
-        Room actual = rooms.getRooms().get(30);
+        ResponseEntity<RoomsResponse> room = this.restTemplate.getForEntity("http://localhost:" + port + "/rooms", RoomsResponse.class);
+        Room actual = room.getBody().getRooms().get(30);
         assertThat(actual, is(expected));
     }
 
@@ -64,10 +66,10 @@ public class RoomControllerTest {
         //when
         this.restTemplate.delete("http://localhost:" + port + "/room/1");
         //then
-        ResponseEntity<RoomResponse> actual = restTemplate.getForEntity("http://localhost:" + port + "/rooms", RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = restTemplate.getForEntity("http://localhost:" + port + "/rooms", RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.OK));
-        assertThat(actual.getBody().getRooms(), CoreMatchers.hasItem(expected));
-        assertThat(actual.getBody().getRooms(), CoreMatchers.not(CoreMatchers.hasItem(deleted)));
+        assertThat(actual.getBody().getRooms(), hasItem(expected));
+        assertThat(actual.getBody().getRooms(), not(hasItem(deleted)));
     }
 
 }

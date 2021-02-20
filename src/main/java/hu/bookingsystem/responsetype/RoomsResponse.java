@@ -6,40 +6,40 @@ import hu.bookingsystem.model.Room;
 import java.util.List;
 import java.util.Objects;
 
-public class RoomResponse {
-    Room room;
+public class RoomsResponse {
+    List<Room> rooms;
 
     @JsonCreator
-    public RoomResponse(Room room) {
-        this.room = room;
+    public RoomsResponse(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
 
-    public Room getRoom() {
-        return room;
+    public List<Room> getRooms() {
+        return rooms;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RoomResponse that = (RoomResponse) o;
-        return Objects.equals(room, that.room);
+        RoomsResponse that = (RoomsResponse) o;
+        return Objects.equals(rooms, that.rooms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(room);
+        return Objects.hash(rooms);
     }
 
     @Override
     public String toString() {
         return "RoomResponse{" +
-                "room=" + room +
+                "rooms=" + rooms +
                 '}';
     }
 }

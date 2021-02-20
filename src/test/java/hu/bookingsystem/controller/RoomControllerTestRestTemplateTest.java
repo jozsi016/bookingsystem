@@ -1,22 +1,17 @@
 package hu.bookingsystem.controller;
 
 import hu.bookingsystem.model.Room;
-import hu.bookingsystem.service.RoomService;
+import hu.bookingsystem.responsetype.ErrorResponse;
 import hu.bookingsystem.responsetype.RoomResponse;
-import org.hamcrest.MatcherAssert;
+import hu.bookingsystem.service.RoomService;
+import hu.bookingsystem.responsetype.RoomsResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -41,13 +36,20 @@ public class RoomControllerTestRestTemplateTest {
     @Test
     public void shouldReturnRoom() throws Exception {
         //given
-        Room room = new Room(3, 5000);
+        Room expectedRoom = new Room(3, 5000);
         //when
-        when(roomServiceMock.getRoomById(any())).thenReturn(room);
+        when(roomServiceMock.getRoomById(any())).thenReturn(expectedRoom);
         //then
         ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/room/1", RoomResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.OK));
-        assertThat(actual.getBody().getRooms().get(0), is(room));
+        assertThat(actual.getBody().getRoom(), is(expectedRoom));
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenRoomNumberWrong(){
+        ResponseEntity<ErrorResponse> actual = this.testRestTemplate.getForEntity("/room/1", ErrorResponse.class);
+        assertThat(actual.getStatusCode(), is(HttpStatus.NOT_FOUND));
+        assertThat(actual.getBody().getCause(), is("The room not available!"));
     }
 
     @Test
@@ -61,9 +63,15 @@ public class RoomControllerTestRestTemplateTest {
         //when
         when(roomServiceMock.getAllRoom()).thenReturn(rooms);
         //then
-        ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/rooms", RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = this.testRestTemplate.getForEntity("/rooms", RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.OK));
         assertThat(actual.getBody().getRooms().get(0), is(room1));
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenRoomsEmpty() throws Exception {
+        ResponseEntity<ErrorResponse> actual = this.testRestTemplate.getForEntity("/rooms", ErrorResponse.class);
+        assertThat(actual.getBody().getCause(), is("The room not available!"));
     }
 
 
@@ -74,7 +82,7 @@ public class RoomControllerTestRestTemplateTest {
         //when
         when(roomServiceMock.getRoomById(any())).thenReturn(room);
         //then
-        ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/room", RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = this.testRestTemplate.getForEntity("/room", RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.METHOD_NOT_ALLOWED));
     }
 
@@ -85,7 +93,7 @@ public class RoomControllerTestRestTemplateTest {
         //when
         when(roomServiceMock.getRoomById(any())).thenReturn(room);
         //then
-        ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/room/%%20", RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = this.testRestTemplate.getForEntity("/room/%%20", RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
@@ -96,7 +104,7 @@ public class RoomControllerTestRestTemplateTest {
         //when
         when(roomServiceMock.getRoomById(any())).thenReturn(room);
         //then
-        ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/", RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = this.testRestTemplate.getForEntity("/", RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
@@ -107,7 +115,7 @@ public class RoomControllerTestRestTemplateTest {
         //when
         when(roomServiceMock.getRoomById(any())).thenReturn(room);
         //then
-        ResponseEntity<RoomResponse> actual = this.testRestTemplate.withBasicAuth("name", "1234").exchange("/room/1", HttpMethod.DELETE, HttpEntity.EMPTY, RoomResponse.class);
+        ResponseEntity<RoomsResponse> actual = this.testRestTemplate.withBasicAuth("name", "1234").exchange("/room/1", HttpMethod.DELETE, HttpEntity.EMPTY, RoomsResponse.class);
         assertThat(actual.getStatusCode(), is(HttpStatus.OK));
     }
 

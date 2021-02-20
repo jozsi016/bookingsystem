@@ -56,14 +56,13 @@ public class RoomControllerMvcTest {
 
     @Test
     public void shouldCreateRoom() throws Exception {
-        //when ? then
+        when(roomServiceMock.createRoom(anyLong(),anyDouble())).thenReturn(new Room(31,4000));
         this.mockMvc.perform(put("/room?roomId=31&unitPrice=4000")).andDo(print()).andExpect(status().isOk());
         verify(roomServiceMock, times(1)).createRoom(31, 4000);
     }
 
     @Test
     public void shouldDeleteRoomById() throws Exception {
-        //when ? then
         this.mockMvc.perform(delete("/room/3")).andDo(print()).andExpect(status().isOk());
         verify(roomServiceMock, times(1)).deleteRoomById((long) 3);
     }

@@ -15,8 +15,8 @@ public class RoomRepository {
         return rooms;
     }
 
-    public void addRoom(Room room) {
-        rooms.put(room.getId(), room);
+    public Room addRoom(Room room) {
+        return rooms.put(room.getId(), room);
     }
 
     public Map<Long, Room> initRooms() {

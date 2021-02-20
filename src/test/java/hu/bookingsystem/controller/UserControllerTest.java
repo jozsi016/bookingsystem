@@ -1,13 +1,17 @@
 package hu.bookingsystem.controller;
 
 import hu.bookingsystem.model.User;
+import hu.bookingsystem.responsetype.ErrorResponse;
+import hu.bookingsystem.responsetype.UserResponse;
+import hu.bookingsystem.responsetype.UsersResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.hamcrest.core.IsNot.not;
@@ -29,28 +33,49 @@ public class UserControllerTest {
         User expected = new User(1, "Tony");
         this.restTemplate.put("http://localhost:" + port + "/user?userId=1&userName=Tony", Long.class, String.class);
         //when
-        User actual = this.restTemplate.getForObject("http://localhost:" + port + "/user/1", User.class);
+        ResponseEntity<UserResponse> userResponse = this.restTemplate.getForEntity("http://localhost:" + port + "/user/1", UserResponse.class);
         //then
+        User actual = userResponse.getBody().getUser();
         assertThat(actual, is(expected));
     }
 
     @Test
-    public void shouldReturnUsers(){
+    public void shouldReturnNotFoundWhenUserIDWrong() {
+        //when
+        ResponseEntity<ErrorResponse> actual = this.restTemplate.getForEntity("/user/1", ErrorResponse.class);
+        //then
+        assertThat(actual.getStatusCode(), is(HttpStatus.NOT_FOUND));
+        assertThat(actual.getBody().getCause(), is("The user is not in the system!"));
+    }
+
+    @Test
+    public void shouldReturnUsers() {
         //given
         User expected = new User(1, "Tony");
         this.restTemplate.put("http://localhost:" + port + "/user?userId=1&userName=Tony", Long.class, String.class);
         this.restTemplate.put("http://localhost:" + port + "/user?userId=2&userName=Tina", Long.class, String.class);
         //when
-        List<LinkedHashMap> users = this.restTemplate.getForObject("http://localhost:" + port + "/users", List.class);
+        ResponseEntity<UsersResponse> usersResponse = this.restTemplate.getForEntity("http://localhost:" + port + "/users", UsersResponse.class);
         //then
-        long id = (int) users.get(0).get("id");
-        String unitPrice = (String) users.get(0).get("name");
-        User actual = new User(id, unitPrice);
+        List<User> users = usersResponse.getBody().getUsers();
+        User actual = users.get(0);
         assertThat(actual, is(expected));
     }
 
     @Test
-    public void shouldDeleteUser(){
+    public void shouldReturnUserNotFoundWhenNoUsersInSystem() {
+        //given
+        this.restTemplate.delete("http://localhost:" + port + "/user/1");
+        this.restTemplate.delete("http://localhost:" + port + "/user/2");
+        //when
+        ResponseEntity<ErrorResponse> actual = this.restTemplate.getForEntity("/users", ErrorResponse.class);
+        //then
+        assertThat(actual.getStatusCode(), is(HttpStatus.NOT_FOUND));
+        assertThat(actual.getBody().getCause(), is("There no any users in the system!"));
+    }
+
+    @Test
+    public void shouldDeleteUser() {
         //Given
         User expected = new User(2, "Tina");
         User tony = new User(1, "Tony");
@@ -59,13 +84,11 @@ public class UserControllerTest {
         //when
         this.restTemplate.delete("http://localhost:" + port + "/user/1");
         //then
-        List<LinkedHashMap> users = this.restTemplate.getForObject("http://localhost:" + port + "/users", List.class);
-        long id = (int) users.get(0).get("id");
-        String unitPrice = (String) users.get(0).get("name");
-        User actual = new User(id, unitPrice);
+        ResponseEntity<UsersResponse> usersResponse = this.restTemplate.getForEntity("http://localhost:" + port + "/users", UsersResponse.class);
+        List<User> users = usersResponse.getBody().getUsers();
+        User actual = users.get(0);
         assertThat(actual, not(tony));
         assertThat(actual, is(expected));
     }
-
 }
 

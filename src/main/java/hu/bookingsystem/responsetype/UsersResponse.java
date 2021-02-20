@@ -3,42 +3,42 @@ package hu.bookingsystem.responsetype;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import hu.bookingsystem.model.User;
 
+import java.util.List;
 import java.util.Objects;
 
-
-public class UserResponse {
-    User user;
+public class UsersResponse {
+    List<User> users;
 
     @JsonCreator
-    public UserResponse(User user) {
-        this.user = user;
+    public UsersResponse(List<User> users) {
+        this.users = users;
     }
 
-    public User getUser() {
-        return user;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserResponse that = (UserResponse) o;
-        return Objects.equals(user, that.user);
+        UsersResponse that = (UsersResponse) o;
+        return Objects.equals(users, that.users);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user);
+        return Objects.hash(users);
     }
 
     @Override
     public String toString() {
         return "UserResponse{" +
-                "user=" + user +
+                "users=" + users +
                 '}';
     }
 }

@@ -15,9 +15,9 @@ public class RoomService {
         this.roomRepo = roomRepo;
     }
 
-    public void createRoom(long id, double price) {
+    public Room createRoom(long id, double price) {
         Room room = new Room(id, price);
-        roomRepo.addRoom(room);
+        return roomRepo.addRoom(room);
     }
 
     public void deleteRoomById(Long roomId) {
