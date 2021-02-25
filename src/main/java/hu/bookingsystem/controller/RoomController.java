@@ -43,7 +43,6 @@ public class RoomController {
         }
     }
 
-    // a jo gyakorlat ha valamit vissza adok, egy id plt 201 created
     @PutMapping("/room")
     public ResponseEntity<RoomResponse> createRoom(@RequestParam Long roomId, double unitPrice) {
         Room room = roomService.createRoom(roomId, unitPrice);
