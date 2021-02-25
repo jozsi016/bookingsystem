@@ -4,6 +4,7 @@ import hu.bookingsystem.model.Reservation;
 import hu.bookingsystem.model.Room;
 import hu.bookingsystem.model.User;
 import hu.bookingsystem.repository.ReservationRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Service
 public class ReservationService {
     public long reservationId = 1;
     private RoomService roomService;
@@ -41,7 +43,7 @@ public class ReservationService {
         List<Room> rooms = roomService.getAllRoom();
         Predicate<Reservation> reservationPredicate =
                 r -> (r.getStartDate().compareTo(start) >= 0 && r.getEndDate().compareTo(start) >= 0) ||
-                        ( r.getStartDate().compareTo(end) >= 0 && r.getEndDate().compareTo(end) >=0);
+                        (r.getStartDate().compareTo(end) >= 0 && r.getEndDate().compareTo(end) >= 0);
         List<Reservation> reservations = reservationRepository.getReservations().values().stream().collect(Collectors.toList());
         for (Reservation r : reservations) {
             if (reservationPredicate.test(r)) {
@@ -49,7 +51,7 @@ public class ReservationService {
                 rooms.remove(room);
             }
         }
-     return rooms;
+        return rooms;
     }
 
     public Reservation getReservationById(long reservationId) {
@@ -64,6 +66,19 @@ public class ReservationService {
     public List<Reservation> getFilteredReservation(Predicate<Reservation> predicate) {
         return reservationRepository.getReservations().values().
                 stream().filter(predicate).collect(Collectors.toList());
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public LocalDate getLocalDate(String date) {
+        String delimater = ":";
+        String[] parsedDate = date.split(delimater);
+        Integer year = Integer.valueOf(parsedDate[0]);
+        Integer month = Integer.valueOf(parsedDate[1]);
+        Integer dayOfMonth = Integer.valueOf(parsedDate[2]);
+        return LocalDate.of(year, month, dayOfMonth);
     }
 }
 
