@@ -1,10 +1,11 @@
 package hu.bookingsystem.repository;
 
 import hu.bookingsystem.model.Reservation;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Component
 public class ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 

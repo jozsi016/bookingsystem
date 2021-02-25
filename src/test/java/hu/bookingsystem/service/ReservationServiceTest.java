@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ReservationServiceTest {
     private ReservationService reservationService;
