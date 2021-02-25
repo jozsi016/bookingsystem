@@ -30,7 +30,6 @@ public class UserController {
     public ResponseEntity<UsersResponse> getUsers() {
         List<User> allUser = userService.getAllUser();
         UsersResponse usersResponse = new UsersResponse(allUser);
-        System.err.println("size " + allUser.size() + "isEmpty " +allUser.isEmpty());
         if (allUser.isEmpty()) {
             throw new RecourseNotFoundException("There no any users in the system!");
         } else {
