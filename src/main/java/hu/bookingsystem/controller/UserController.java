@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<UsersResponse> getUsers() {
         List<User> allUser = userService.getAllUser();
-        UsersResponse usersResponse = new UsersResponse(allUser);
+        UsersResponse usersResponse = new UsersResponse.Builder().withUsers(allUser).build();
         if (allUser.isEmpty()) {
             throw new RecourseNotFoundException("There no any users in the system!");
         } else {
@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("user/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long userId) {
         User userById = userService.getUserById(userId);
-        UserResponse response = new UserResponse(userById);
+        UserResponse response = new UserResponse.Builder().withUser(userById).build();
         if (userById == null) {
             throw new RecourseNotFoundException("The user is not in the system!");
         } else {
@@ -55,7 +55,7 @@ public class UserController {
 
     @ExceptionHandler({RecourseNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleException(RecourseNotFoundException e) {
-        ErrorResponse response = new ErrorResponse(e.getMessage());
+        ErrorResponse response = new ErrorResponse.Builder().withCause(e.getMessage()).build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

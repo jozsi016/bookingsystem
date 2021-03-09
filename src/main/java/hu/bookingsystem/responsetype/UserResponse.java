@@ -1,25 +1,20 @@
 package hu.bookingsystem.responsetype;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import hu.bookingsystem.model.User;
 
 import java.util.Objects;
 
+@JsonDeserialize(builder = UserResponse.Builder.class)
+public final class UserResponse {
+    private final User user;
 
-public class UserResponse {
-    User user;
-
-    @JsonCreator
-    public UserResponse(User user) {
-        this.user = user;
+    private UserResponse(UserResponse.Builder builder) {
+        this.user = builder.user;
     }
 
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override
@@ -40,5 +35,18 @@ public class UserResponse {
         return "UserResponse{" +
                 "user=" + user +
                 '}';
+    }
+
+    public static class Builder {
+        private User user;
+
+        public Builder withUser(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public UserResponse build() {
+            return new UserResponse(this);
+        }
     }
 }

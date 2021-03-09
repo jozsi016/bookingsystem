@@ -24,7 +24,7 @@ public class RoomController {
     @GetMapping("/rooms")
     public ResponseEntity<RoomsResponse> getRooms() {
         List<Room> allRoom = roomService.getAllRoom();
-        RoomsResponse body = new RoomsResponse(allRoom);
+        RoomsResponse body = new RoomsResponse.Builder().withRooms(allRoom).build();
         if (allRoom.isEmpty()) {
             throw new RecourseNotFoundException("The room not available!");
         } else {
@@ -35,7 +35,7 @@ public class RoomController {
     @GetMapping("/room/{roomId}")
     public ResponseEntity<RoomResponse> getRoom(@PathVariable Long roomId) {
         Room roomById = roomService.getRoomById(roomId);
-        RoomResponse response = new RoomResponse(roomById);
+        RoomResponse response = new RoomResponse.Builder().withRoom(roomById).build();
         if (roomById == null) {
             throw new RecourseNotFoundException("The room not available!");
         } else {
@@ -46,7 +46,7 @@ public class RoomController {
     @PutMapping("/room")
     public ResponseEntity<RoomResponse> createRoom(@RequestParam Long roomId, double unitPrice) {
         Room room = roomService.createRoom(roomId, unitPrice);
-        RoomResponse response = new RoomResponse(room);
+        RoomResponse response = new RoomResponse.Builder().withRoom(room).build();
         if(room == null) {
             throw new RecourseNotFoundException("The room not created");
         } else {
@@ -62,7 +62,7 @@ public class RoomController {
 
     @ExceptionHandler({RecourseNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleException(RecourseNotFoundException e) {
-        ErrorResponse response = new ErrorResponse(e.getMessage());
+        ErrorResponse response =  new ErrorResponse.Builder().withCause(e.getMessage()).build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

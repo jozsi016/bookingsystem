@@ -1,15 +1,14 @@
 package hu.bookingsystem.responsetype;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Objects;
 
-public class ErrorResponse {
+@JsonDeserialize(builder = ErrorResponse.Builder.class)
+public final class ErrorResponse {
     private final String cause;
 
-    @JsonCreator
-    public ErrorResponse(String cause) {
-        this.cause = cause;
+    private ErrorResponse(ErrorResponse.Builder builder) {
+        this.cause = builder.cause;
     }
 
     public String getCause() {
@@ -27,5 +26,18 @@ public class ErrorResponse {
     @Override
     public int hashCode() {
         return Objects.hash(cause);
+    }
+
+    public static class Builder {
+        private String cause;
+
+        public Builder withCause(String cause) {
+            this.cause = cause;
+            return this;
+        }
+
+        public ErrorResponse build() {
+            return new ErrorResponse(this);
+        }
     }
 }

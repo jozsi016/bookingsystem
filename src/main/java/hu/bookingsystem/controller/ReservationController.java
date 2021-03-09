@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @RestController
 public class ReservationController {
@@ -23,7 +24,9 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @PutMapping("/reservation")
+    //buldierhez kell anotacio hogy tudja ertelmezni
+    //Posttal lehet jo
+    @PostMapping("/reservation")
     public void createReservation(CreateReservationRequest createReservationRequest) {
         LocalDate start = reservationService.getLocalDate(createReservationRequest.getStartStr());
         LocalDate end = reservationService.getLocalDate(createReservationRequest.getEndStr());
@@ -38,7 +41,7 @@ public class ReservationController {
     @GetMapping("/reservation/{reservationId}")
     public ResponseEntity<ReservationResponse> getReservationById(@PathVariable long reservationId) {
         Reservation reservationById = reservationService.getReservationById(reservationId);
-        ReservationResponse response = new ReservationResponse(reservationById);
+        ReservationResponse response = new ReservationResponse.Builder().withReservation(reservationById).build();
         return ResponseEntity.ok(response);
     }
 
@@ -55,14 +58,15 @@ public class ReservationController {
         reservationService.deleteReservation(reservationId);
     }
 
-    @GetMapping("/reservation/{userId}")
-    public List<Reservation> getAllUserReservationsByUserId(@PathVariable long userId) {
+    @GetMapping("/reservation/user/{userId}")
+    public List<Reservation> getAllUserReservationsByUserId(@RequestParam long userId) {
         return reservationService.getAllUserReservationsByUserId(userId);
     }
 
     public List<Reservation> getFilteredReservation(Predicate<Reservation> predicate) {
-        return null; //  reservationRepository.getReservations().values().
-        //stream().filter(predicate).collect(Collectors.toList());
+        //  Predicate<Reservation> predicateForAge =
+        //                (r) -> r.getUserId() == user.getId() && r.getStartDate().compareTo(forFilter) >= 0;
+        return reservationService.getFilteredReservation(predicate);
     }
 
 }

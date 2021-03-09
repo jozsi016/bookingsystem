@@ -1,27 +1,22 @@
 package hu.bookingsystem.responsetype;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import hu.bookingsystem.model.Room;
 
-import java.util.List;
 import java.util.Objects;
 
-public class RoomResponse {
-    Room room;
+@JsonDeserialize(builder = RoomResponse.Builder.class)
+public final class RoomResponse {
+    private final Room room;
 
-    @JsonCreator
-    public RoomResponse(Room room) {
-        this.room = room;
+    private RoomResponse(RoomResponse.Builder builder) {
+        this.room = builder.room;
     }
-
 
     public Room getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -41,6 +36,19 @@ public class RoomResponse {
         return "RoomResponse{" +
                 "room=" + room +
                 '}';
+    }
+
+    public static class Builder {
+        private Room room;
+
+        public Builder withRoom(Room room) {
+            this.room = room;
+            return this;
+        }
+
+        public RoomResponse build() {
+            return new RoomResponse(this);
+        }
     }
 }
 
