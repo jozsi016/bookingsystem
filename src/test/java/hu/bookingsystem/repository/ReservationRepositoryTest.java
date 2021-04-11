@@ -4,12 +4,10 @@ import hu.bookingsystem.model.Reservation;
 import hu.bookingsystem.model.Room;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDate;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -34,7 +32,6 @@ public class ReservationRepositoryTest {
         repoSpy.addReservation(expected);
         Reservation actual = repoSpy.getReservations().get(1L);
         //Then
-      //  assertEquals(expected, actual);
         assertThat(actual, is(expected));
         verify(repoSpy).addReservation(expected);
     }

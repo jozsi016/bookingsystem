@@ -48,8 +48,6 @@ public class ReservationControllerTest {
                 this.restTemplate.getForEntity("/reservation/1", ReservationResponse.class);
         //then
         Reservation actual = response.getBody().getReservation();
-     //          ResponseEntity<RoomResponse> actual = this.testRestTemplate.getForEntity("/room/1", RoomResponse.class);
-       // assertThat(actual, is(expected));
         verify(reservationServiceMock).getReservationById(anyLong());
 
     }
