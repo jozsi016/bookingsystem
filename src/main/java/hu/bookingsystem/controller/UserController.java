@@ -53,7 +53,7 @@ public class UserController {
         userService.deleteUserById(userId);
     }
 
-    @ExceptionHandler({RecourseNotFoundException.class})
+    @ExceptionHandler({RecourseNotFoundException.class, IllegalArgumentException.class})
     public ResponseEntity<ErrorResponse> handleException(RecourseNotFoundException e) {
         ErrorResponse response = new ErrorResponse.Builder().withCause(e.getMessage()).build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

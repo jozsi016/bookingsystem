@@ -90,5 +90,12 @@ public class UserControllerTest {
         assertThat(actual, not(tony));
         assertThat(actual, is(expected));
     }
+
+    @Test
+    public void shouldThrowsException() {
+        //then
+        ResponseEntity<UsersResponse> usersResponse = this.restTemplate.getForEntity("http://localhost:" + port + "/user/1", UsersResponse.class);
+        assertThat(usersResponse.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
 }
 
