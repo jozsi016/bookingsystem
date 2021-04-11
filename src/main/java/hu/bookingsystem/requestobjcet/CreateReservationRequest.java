@@ -1,6 +1,5 @@
 package hu.bookingsystem.requestobjcet;
 
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 

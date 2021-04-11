@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @RestController
 public class ReservationController {
@@ -24,8 +23,6 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    //buldierhez kell anotacio hogy tudja ertelmezni
-    //Posttal lehet jo
     @PostMapping("/reservation")
     public void createReservation(CreateReservationRequest createReservationRequest) {
         LocalDate start = reservationService.getLocalDate(createReservationRequest.getStartStr());
